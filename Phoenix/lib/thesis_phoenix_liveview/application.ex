@@ -10,7 +10,8 @@ defmodule ThesisPhoenixLiveview.Application do
     children = [
       ThesisPhoenixLiveviewWeb.Telemetry,
       ThesisPhoenixLiveview.Repo,
-      {DNSCluster, query: Application.get_env(:thesis_phoenix_liveview, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:thesis_phoenix_liveview, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ThesisPhoenixLiveview.PubSub},
       # Start a worker by calling: ThesisPhoenixLiveview.Worker.start_link(arg)
       # {ThesisPhoenixLiveview.Worker, arg},
