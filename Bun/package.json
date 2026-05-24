@@ -7,23 +7,36 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "bun --watch src/index.ts",
+    "dev": "bun src/index.ts",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
     "start": "bun src/index.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "file-type": "^22.0.1",
+    "multer": "^2.1.1",
+    "pg": "^8.21.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.0",
-    "tsx": "^4.22.2",
-    "typescript": "^6.0.3",
+    "@types/body-parser": "^1.19.6",
+    "@types/connect": "^3.4.38",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "prisma": "^7.8.0"
+    "@types/express-serve-static-core": "^5.1.1",
+    "@types/http-errors": "^2.0.5",
+    "@types/multer": "^2.1.0",
+    "@types/node": "^25.9.0",
+    "@types/qs": "^6.15.1",
+    "@types/range-parser": "^1.2.7",
+    "@types/send": "^1.2.1",
+    "@types/serve-static": "^2.2.0",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.2",
+    "typescript": "5"
   }
 }

@@ -11,3 +11,14 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model BunUpload {
+  id           String   @id @default(uuid())
+  originalName String
+  fileName     String
+  mimeType     String
+  size         Int
+  createdAt    DateTime @default(now())
+
+  @@map("bun")
+}
