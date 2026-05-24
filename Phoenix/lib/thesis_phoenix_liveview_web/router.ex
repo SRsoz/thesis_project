@@ -10,20 +10,11 @@ defmodule ThesisPhoenixLiveviewWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/", ThesisPhoenixLiveviewWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", UploadLive
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", ThesisPhoenixLiveviewWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:thesis_phoenix_liveview, :dev_routes) do

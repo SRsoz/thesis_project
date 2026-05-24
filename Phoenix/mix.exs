@@ -82,7 +82,11 @@ defmodule ThesisPhoenixLiveview.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["compile", "tailwind thesis_phoenix_liveview", "esbuild thesis_phoenix_liveview"],
+      "assets.build": [
+        "compile",
+        "tailwind thesis_phoenix_liveview",
+        "esbuild thesis_phoenix_liveview"
+      ],
       "assets.deploy": [
         "tailwind thesis_phoenix_liveview --minify",
         "esbuild thesis_phoenix_liveview --minify",
