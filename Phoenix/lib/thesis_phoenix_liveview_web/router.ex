@@ -13,7 +13,7 @@ defmodule ThesisPhoenixLiveviewWeb.Router do
   scope "/", ThesisPhoenixLiveviewWeb do
     pipe_through :browser
 
-    live "/", UploadLive
+    get "/", PageController, :home
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

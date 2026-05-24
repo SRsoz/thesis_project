@@ -4,7 +4,7 @@ import Config
 config :thesis_phoenix_liveview, ThesisPhoenixLiveview.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: System.get_env("POSTGRES_HOST") || "172.31.80.1",
   database: "phoenix_db",
   port: 5432,
   stacktrace: true,
