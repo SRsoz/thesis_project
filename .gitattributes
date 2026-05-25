@@ -1,0 +1,22 @@
+* text=auto
+
+*.css text eol=lf
+*.ex text eol=lf
+*.exs text eol=lf
+*.gitignore text eol=lf
+*.heex text eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.lock text eol=lf
+*.md text eol=lf
+*.prisma text eol=lf
+*.sql text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.yml text eol=lf
+
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.png binary

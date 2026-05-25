@@ -8,7 +8,7 @@ import { prisma } from "../lib/prisma";
 
 const router = Router();
 
-const uploadsDir = path.resolve(process.cwd(), "uploads");
+export const uploadsDir = process.env.UPLOADS_DIR ?? path.resolve(process.cwd(), "uploads");
 await mkdir(uploadsDir, { recursive: true });
 
 const allowedMimeTypes = new Set([
