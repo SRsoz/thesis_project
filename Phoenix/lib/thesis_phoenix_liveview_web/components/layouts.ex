@@ -38,18 +38,14 @@ defmodule ThesisPhoenixLiveviewWeb.Layouts do
     <header class="flex items-center border-b border-base-300 px-4 py-4 sm:px-6 lg:px-8">
       <div class="flex-1">
         <a href="/" class="flex w-fit items-center gap-2 text-sm font-semibold">
-          <.icon name="hero-cloud-arrow-up" class="size-5" />
-          <span>Uploads</span>
+          <.icon name="hero-cloud-arrow-up" class="size-5" /> <span>Uploads</span>
         </a>
       </div>
     </header>
 
     <main class="px-4 py-10 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-4xl space-y-6">
-        {render_slot(@inner_block)}
-      </div>
+      <div class="mx-auto max-w-4xl space-y-6">{render_slot(@inner_block)}</div>
     </main>
-
     <.flash_group flash={@flash} />
     """
   end
@@ -67,9 +63,7 @@ defmodule ThesisPhoenixLiveviewWeb.Layouts do
   def flash_group(assigns) do
     ~H"""
     <div id={@id} aria-live="polite">
-      <.flash kind={:info} flash={@flash} />
-      <.flash kind={:error} flash={@flash} />
-
+      <.flash kind={:info} flash={@flash} /> <.flash kind={:error} flash={@flash} />
       <.flash
         id="client-error"
         kind={:error}
