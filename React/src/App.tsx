@@ -24,17 +24,18 @@ function App() {
         method: 'POST',
         body: formData,
       })
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error('Upload failed')
+        throw new Error(data.message || 'upload failed')
       }
 
-      setMessage('upload successful')
+      setMessage(data.message || 'upload successful')
       setIsSuccess(true)
       setFile(null)
       form.reset()
-    } catch {
-      setMessage('upload failed')
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'upload failed')
       setIsSuccess(false)
     }
   }
