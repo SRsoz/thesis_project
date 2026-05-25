@@ -39,7 +39,7 @@ router.post("/", upload.single("file"), async (req, res, next) => {
     const detectedType = await fileTypeFromBuffer(req.file.buffer);
 
     if (!detectedType || !allowedMimeTypes.has(detectedType.mime)) {
-      res.status(415).json({ message: "Only image files are allowed" });
+      res.status(415).json({ message: "Only png and jpeg files allowed" });
       return;
     }
 
