@@ -3,7 +3,6 @@
 *.css text eol=lf
 *.ex text eol=lf
 *.exs text eol=lf
-*.gitignore text eol=lf
 *.heex text eol=lf
 *.html text eol=lf
 *.js text eol=lf
