@@ -34,20 +34,20 @@ defmodule ThesisPhoenixLiveviewWeb.UploadLive do
   def render(assigns) do
     ~H"""
     <main class="page">
-      <form class="upload-form" phx-change="validate" phx-submit="upload">
-        <label class="file-button" for={@uploads.file.ref}>
+      <form id="upload-form" class="upload-form" phx-change="validate" phx-submit="upload">
+        <label id="file-button" class="file-button" for={@uploads.file.ref}>
           Choose file
         </label>
 
         <.live_file_input upload={@uploads.file} class="file-input" />
 
-        <p class="file-name">{selected_file_name(@uploads.file)}</p>
+        <p id="file-name" class="file-name">{selected_file_name(@uploads.file)}</p>
 
-        <button class="upload-button" type="submit">
+        <button id="upload-button" class="upload-button" type="submit">
           Upload file
         </button>
 
-        <p :if={@message} class={["message", @message_status]}>
+        <p :if={@message} id="upload-message" class={["message", @message_status]}>
           {@message}
         </p>
       </form>

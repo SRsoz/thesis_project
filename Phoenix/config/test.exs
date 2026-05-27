@@ -13,6 +13,9 @@ config :thesis_phoenix_liveview, ThesisPhoenixLiveview.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
 
+config :thesis_phoenix_liveview,
+  uploads_dir: Path.expand("../tmp/test-uploads", __DIR__)
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :thesis_phoenix_liveview, ThesisPhoenixLiveviewWeb.Endpoint,

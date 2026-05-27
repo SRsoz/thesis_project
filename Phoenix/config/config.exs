@@ -9,7 +9,8 @@ import Config
 
 config :thesis_phoenix_liveview,
   ecto_repos: [ThesisPhoenixLiveview.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime],
+  uploads_dir: "priv/static/uploads"
 
 # Configures the endpoint
 config :thesis_phoenix_liveview, ThesisPhoenixLiveviewWeb.Endpoint,
