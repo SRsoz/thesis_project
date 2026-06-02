@@ -70,7 +70,11 @@ defmodule ThesisPhoenixLiveview.Uploads do
   end
 
   defp copy_upload(path, mime_type) do
-    uploads_dir = Path.expand("priv/static/uploads")
+    uploads_dir =
+      :thesis_phoenix_liveview
+      |> Application.get_env(:uploads_dir, "priv/static/uploads")
+      |> Path.expand()
+
     File.mkdir_p!(uploads_dir)
 
     file_name = "#{Ecto.UUID.generate()}.#{extension_for(mime_type)}"
