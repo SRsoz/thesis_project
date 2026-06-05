@@ -51,6 +51,7 @@ function App() {
           id="file-input"
           className="file-input"
           type="file"
+          accept=".png,image/png"
           onChange={(event) => setFile(event.target.files?.[0] ?? null)}
         />
 

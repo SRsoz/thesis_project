@@ -12,12 +12,10 @@ export const uploadsDir = process.env.UPLOADS_DIR ?? path.resolve(process.cwd(),
 await mkdir(uploadsDir, { recursive: true });
 
 const allowedMimeTypes = new Set([
-  "image/jpeg",
   "image/png",
 ]);
 
 const extensionByMimeType: Record<string, string> = {
-  "image/jpeg": "jpg",
   "image/png": "png",
 };
 
@@ -39,7 +37,7 @@ router.post("/", upload.single("file"), async (req, res, next) => {
     const detectedType = await fileTypeFromBuffer(req.file.buffer);
 
     if (!detectedType || !allowedMimeTypes.has(detectedType.mime)) {
-      res.status(415).json({ message: "Only png and jpeg files allowed" });
+      res.status(415).json({ message: "Only png files allowed" });
       return;
     }
 

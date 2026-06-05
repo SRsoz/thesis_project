@@ -20,6 +20,7 @@ const testUploadsDir = path.resolve(process.cwd(), ".test-uploads");
 
 let baseUrl: string;
 let server: Server;
+let cleanupClient: Client;
 let prisma: Awaited<typeof import("../src/lib/prisma")>["prisma"];
 
 beforeAll(async () => {
@@ -31,6 +32,12 @@ beforeAll(async () => {
   await ensureTestDatabase(testDatabaseUrl);
   await resetTestSchema(testDatabaseUrl);
   await runPrismaMigrations(testDatabaseUrl);
+
+  cleanupClient = new Client({
+    connectionString: testDatabaseUrl,
+    connectionTimeoutMillis: 5000,
+  });
+  await cleanupClient.connect();
 
   const appModule = await import("../src/app");
   const prismaModule = await import("../src/lib/prisma");
@@ -57,6 +64,7 @@ afterEach(async () => {
 
 afterAll(async () => {
   await prisma?.$disconnect();
+  await cleanupClient?.end();
   await new Promise<void>((resolve, reject) => {
     if (!server) {
       resolve();
@@ -95,19 +103,6 @@ describe("POST /api/uploads", () => {
     expect(await uploadedFileNames()).toContain(body.file.fileName);
   });
 
-  test("stores a valid jpeg file on disk and in the database", async () => {
-    const response = await uploadFile("photo.jpg", "image/jpeg", jpegBytes());
-    const body = await response.json();
-
-    expect(response.status).toBe(201);
-    expect(body.file.mimeType).toBe("image/jpeg");
-    expect(body.file.fileName).toEndWith(".jpg");
-
-    const uploads = await prisma.bunUpload.findMany();
-    expect(uploads).toHaveLength(1);
-    expect(uploads[0].originalName).toBe("photo.jpg");
-  });
-
   test("rejects requests without a file", async () => {
     const response = await fetch(`${baseUrl}/api/uploads`, {
       method: "POST",
@@ -121,12 +116,12 @@ describe("POST /api/uploads", () => {
     expect(await uploadedFileNames()).toEqual([]);
   });
 
-  test("rejects files whose content is not png or jpeg", async () => {
+  test("rejects files whose content is not png", async () => {
     const response = await uploadFile("notes.txt", "text/plain", Buffer.from("hello"));
     const body = await response.json();
 
     expect(response.status).toBe(415);
-    expect(body.message).toBe("Only png and jpeg files allowed");
+    expect(body.message).toBe("Only png files allowed");
     expect(await prisma.bunUpload.count()).toBe(0);
     expect(await uploadedFileNames()).toEqual([]);
   });
@@ -160,13 +155,13 @@ async function emptyUploadsDir() {
 }
 
 async function cleanTestState() {
-  await prisma.bunUpload.deleteMany();
+  await cleanupClient.query('TRUNCATE TABLE "bun"');
   await emptyUploadsDir();
 }
 
 async function uploadedFileNames() {
   const files = await readdir(testUploadsDir);
-  return files.filter((file) => file.endsWith(".png") || file.endsWith(".jpg"));
+  return files.filter((file) => file.endsWith(".png"));
 }
 
 async function ensureTestDatabase(databaseUrl: string) {
@@ -176,7 +171,10 @@ async function ensureTestDatabase(databaseUrl: string) {
   const adminUrl = new URL(databaseUrl);
   adminUrl.pathname = "/postgres";
 
-  const client = new Client({ connectionString: adminUrl.toString() });
+  const client = new Client({
+    connectionString: adminUrl.toString(),
+    connectionTimeoutMillis: 5000,
+  });
   await client.connect();
 
   const exists = await client.query("SELECT 1 FROM pg_database WHERE datname = $1", [
@@ -191,7 +189,10 @@ async function ensureTestDatabase(databaseUrl: string) {
 }
 
 async function resetTestSchema(databaseUrl: string) {
-  const client = new Client({ connectionString: databaseUrl });
+  const client = new Client({
+    connectionString: databaseUrl,
+    connectionTimeoutMillis: 5000,
+  });
   await client.connect();
   await client.query('DROP SCHEMA IF EXISTS "public" CASCADE');
   await client.query('CREATE SCHEMA "public"');
@@ -252,11 +253,4 @@ function oversizedPngBytes() {
   const header = pngBytes();
   const maxFileSize = 20 * 1024 * 1024;
   return Buffer.concat([header, Buffer.alloc(maxFileSize + 1 - header.length, 1)]);
-}
-
-function jpegBytes() {
-  return Buffer.from(
-    "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAX/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAH/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAEFAqf/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/ASP/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAECAQE/ASP/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAY/Al//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAE/IV//2gAMAwEAAgADAAAAEP/EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8QH//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8QH//EABQQAQAAAAAAAAAAAAAAAAAAABD/2gAIAQEAAT8QH//Z",
-    "base64",
-  );
 }
