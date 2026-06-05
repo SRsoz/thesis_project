@@ -10,7 +10,7 @@ defmodule ThesisPhoenixLiveviewWeb.UploadLive do
       |> assign(:message, nil)
       |> assign(:message_status, nil)
       |> allow_upload(:file,
-        accept: :any,
+        accept: ~w(.png),
         max_entries: 1,
         max_file_size: Uploads.max_file_size()
       )

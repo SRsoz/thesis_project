@@ -5,7 +5,7 @@ defmodule ThesisPhoenixLiveview.Uploads do
   @success_message "Upload successful"
   @failed_message "Upload failed"
   @no_file_message "No file was uploaded"
-  @invalid_type_message "Only png and jpeg files allowed"
+  @invalid_type_message "Only png files allowed"
   @too_large_message "Only 20MB files allowed"
   @max_file_size Upload.max_file_size()
 
@@ -63,7 +63,6 @@ defmodule ThesisPhoenixLiveview.Uploads do
   defp detected_mime_type(path) do
     case File.read(path) do
       {:ok, <<137, 80, 78, 71, 13, 10, 26, 10, _rest::binary>>} -> {:ok, "image/png"}
-      {:ok, <<255, 216, 255, _rest::binary>>} -> {:ok, "image/jpeg"}
       {:ok, _contents} -> {:error, @invalid_type_message}
       {:error, _reason} -> {:error, @failed_message}
     end
@@ -98,7 +97,6 @@ defmodule ThesisPhoenixLiveview.Uploads do
     {:error, changeset_message(changeset)}
   end
 
-  defp extension_for("image/jpeg"), do: "jpg"
   defp extension_for("image/png"), do: "png"
 
   defp changeset_message(changeset) do

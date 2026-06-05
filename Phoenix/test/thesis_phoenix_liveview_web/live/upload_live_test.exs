@@ -42,13 +42,13 @@ defmodule ThesisPhoenixLiveviewWeb.UploadLiveTest do
 
     upload =
       file_input(view, "#upload-form", :file, [
-        %{name: "notes.txt", content: "hello", type: "text/plain"}
+        %{name: "fake.png", content: "hello", type: "image/png"}
       ])
 
-    render_upload(upload, "notes.txt")
+    render_upload(upload, "fake.png")
     view |> form("#upload-form", %{}) |> render_submit()
 
-    assert has_element?(view, "#upload-message.error", "Only png and jpeg files allowed")
+    assert has_element?(view, "#upload-message.error", "Only png files allowed")
     assert Repo.aggregate(Upload, :count) == 0
     assert uploaded_file_names() == []
   end
@@ -77,7 +77,7 @@ defmodule ThesisPhoenixLiveviewWeb.UploadLiveTest do
   defp uploaded_file_names do
     uploads_dir()
     |> File.ls!()
-    |> Enum.filter(&(String.ends_with?(&1, ".png") or String.ends_with?(&1, ".jpg")))
+    |> Enum.filter(&String.ends_with?(&1, ".png"))
   end
 
   defp uploads_dir do

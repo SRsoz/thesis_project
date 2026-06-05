@@ -18,8 +18,8 @@ defmodule ThesisPhoenixLiveview.Uploads.Upload do
     upload
     |> cast(attrs, [:original_name, :file_name, :mime_type, :size])
     |> validate_required([:original_name, :file_name, :mime_type, :size])
-    |> validate_inclusion(:mime_type, ["image/jpeg", "image/png"],
-      message: "Only png and jpeg files allowed"
+    |> validate_inclusion(:mime_type, ["image/png"],
+      message: "Only png files allowed"
     )
     |> validate_number(:size,
       greater_than: 0,
