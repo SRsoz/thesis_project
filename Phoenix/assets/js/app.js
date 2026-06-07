@@ -26,10 +26,79 @@ import {hooks as colocatedHooks} from "phoenix-colocated/thesis_phoenix_liveview
 import topbar from "../vendor/topbar"
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+const hooks = {
+  UploadForm: {
+    mounted() {
+      this.input = this.el.querySelector("[data-upload-input]")
+      this.fileName = this.el.querySelector("[data-file-name]")
+      this.message = this.el.querySelector("[data-upload-message]")
+      this.submitButton = this.el.querySelector("[data-upload-submit]")
+
+      this.onChange = () => this.setFileName()
+      this.onSubmit = event => this.upload(event)
+
+      this.input.addEventListener("change", this.onChange)
+      this.el.addEventListener("submit", this.onSubmit)
+    },
+    destroyed() {
+      this.input.removeEventListener("change", this.onChange)
+      this.el.removeEventListener("submit", this.onSubmit)
+    },
+    setFileName() {
+      const file = this.input.files[0]
+      this.fileName.textContent = file ? file.name : "no file chosen"
+    },
+    async upload(event) {
+      event.preventDefault()
+
+      const file = this.input.files[0]
+      if (!file) {
+        this.showMessage("upload failed", "error")
+        return
+      }
+
+      const formData = new FormData()
+      formData.append("file", file)
+      this.setUploading(true)
+
+      try {
+        const response = await fetch(this.el.action, {
+          method: "POST",
+          headers: {accept: "application/json"},
+          body: formData,
+        })
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.message || "upload failed")
+        }
+
+        this.showMessage(data.message || "upload successful", "success")
+        this.el.reset()
+        this.setFileName()
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "upload failed"
+        this.showMessage(message, "error")
+      } finally {
+        this.setUploading(false)
+      }
+    },
+    setUploading(isUploading) {
+      this.submitButton.disabled = isUploading
+    },
+    showMessage(message, status) {
+      this.message.textContent = message
+      this.message.classList.remove("hidden", "success", "error")
+      this.message.classList.add(status)
+    },
+  },
+  ...colocatedHooks,
+}
+
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks},
+  hooks: hooks,
 })
 
 // Show progress bar on live navigation and form submits
@@ -80,4 +149,3 @@ if (process.env.NODE_ENV === "development") {
     window.liveReloader = reloader
   })
 }
-
