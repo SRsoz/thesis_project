@@ -9,7 +9,7 @@ defmodule ThesisPhoenixLiveview.Uploads.Upload do
     field :file_name, :string
     field :mime_type, :string
     field :size, :integer
-    field :created_at, :utc_datetime
+    field :created_at, :utc_datetime, read_after_writes: true
   end
 
   def max_file_size, do: @max_file_size
@@ -18,9 +18,7 @@ defmodule ThesisPhoenixLiveview.Uploads.Upload do
     upload
     |> cast(attrs, [:original_name, :file_name, :mime_type, :size])
     |> validate_required([:original_name, :file_name, :mime_type, :size])
-    |> validate_inclusion(:mime_type, ["image/png"],
-      message: "Only png files allowed"
-    )
+    |> validate_inclusion(:mime_type, ["image/png"], message: "Only png files allowed")
     |> validate_number(:size,
       greater_than: 0,
       less_than_or_equal_to: @max_file_size,

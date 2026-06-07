@@ -19,6 +19,12 @@ defmodule ThesisPhoenixLiveview.Uploads do
 
   def no_file_message, do: @no_file_message
 
+  def failed_message, do: @failed_message
+
+  def invalid_type_message, do: @invalid_type_message
+
+  def too_large_message, do: @too_large_message
+
   def upload_error_message(:too_large), do: @too_large_message
   def upload_error_message(:not_accepted), do: @invalid_type_message
   def upload_error_message(:too_many_files), do: @failed_message

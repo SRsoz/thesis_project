@@ -42,8 +42,10 @@ defmodule ThesisPhoenixLiveviewWeb.Endpoint do
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
+  @multipart_length 25 * 1024 * 1024
+
   plug Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
+    parsers: [:urlencoded, {:multipart, length: @multipart_length}, :json],
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
 
